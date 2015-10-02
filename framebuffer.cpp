@@ -29,7 +29,7 @@ void	framebuffer::stroke_rect( size_t x, size_t y, size_t w, size_t h, int r, in
 {
 	size_t currY = y;
 	
-	size_t maxX = (x +w), maxY = (x +h);
+	size_t maxX = (x +w), maxY = (y +h);
 	
 	if( maxX >= mVariableScreenProperties.xres )
 		maxX = mVariableScreenProperties.xres;
