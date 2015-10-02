@@ -83,6 +83,7 @@ namespace winner
 		void	fill_circle( size_t x, size_t y, size_t radius, int r, int g, int b, int a );
 		void	stroke_circle( size_t x, size_t y, size_t radius, int r, int g, int b, int a, size_t lineWidth );
 		void	stroke_line( size_t startX, size_t startY, size_t endX, size_t endY, int r, int g, int b, int a );
+		void	stroke_line( size_t startX, size_t startY, size_t endX, size_t endY, int r, int g, int b, int a, size_t lineWidth );
 		
     protected:
         int							mFrameBufferDevice;

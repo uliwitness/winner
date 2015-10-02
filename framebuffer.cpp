@@ -193,4 +193,16 @@ void	framebuffer::stroke_line( size_t startX, size_t startY, size_t endX, size_t
 }
 
 
+void	framebuffer::stroke_line( size_t startX, size_t startY, size_t endX, size_t endY, int r, int g, int b, int a, size_t lineWidth )
+{
+	if( startY == endY || startX == endX )	// horizontal or vertical
+	{
+		fill_rect( startX, startY, endX -startX +lineWidth, endY -startY +lineWidth, r, g, b, a );
+	}
+	else
+	{
+		stroke_line( startX, startY, endX, endY, r, g, b, a );
+	}
+}
+
 } /* namespace winner */
