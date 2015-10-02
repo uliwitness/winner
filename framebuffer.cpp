@@ -7,7 +7,7 @@ namespace winner
 
 void	framebuffer::fill_rect( size_t x, size_t y, size_t w, size_t h, int r, int g, int b, int a )
 {
-	size_t maxX = (x +w), maxY = (x +h);
+	size_t maxX = (x +w), maxY = (y +h);
 	
 	if( maxX >= mVariableScreenProperties.xres )
 		maxX = mVariableScreenProperties.xres;
