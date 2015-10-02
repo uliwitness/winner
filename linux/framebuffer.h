@@ -10,6 +10,9 @@
 #include <sys/ioctl.h>
 
 
+#define UpdateFrameBuffer(...)	do{}while(0)
+
+
 namespace winner
 {
 

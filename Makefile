@@ -4,7 +4,7 @@ CC = clang++
 # compiler flags:
 #  -g    adds debugging information to the executable file
 #  -Wall turns on most, but not all, compiler warnings
-CFLAGS  = -g -Wall -std=c++11
+CFLAGS  = -g -Wall -std=c++11 -I linux
   
 #files to link:
 LFLAGS = 
