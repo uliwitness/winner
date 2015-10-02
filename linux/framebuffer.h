@@ -79,6 +79,7 @@ namespace winner
         {
             return mFramebuffer +((x + mVariableScreenProperties.xoffset) * (mVariableScreenProperties.bits_per_pixel / 8) + (y + mVariableScreenProperties.yoffset) * mFixedScreenProperties.line_length);
         }
+		
         void		set_pixel( size_t x, size_t y, int r, int g, int b, int a )
         {
             uint8_t*	currPixel = pixel_at( x, y );
@@ -95,20 +96,12 @@ namespace winner
             else
                 std::cerr << "Unsupported depth " << mVariableScreenProperties.bits_per_pixel << "bpp" << std::endl;
         }
-        void	fill( size_t x, size_t y, size_t w, size_t h, int r, int g, int b, int a )
-        {
-            assert( (x + w) <= mVariableScreenProperties.xres );
-            assert( (y + h) <= mVariableScreenProperties.yres );
 
-            for( size_t currY = y; currY < (y + h); currY++ )
-            {
-                for( size_t currX = x; currX < (x + w); currX++ )
-                {
-                    set_pixel( currX, currY, r, g, b, a );
-                }
-            }
-        }
-
+		void	fill_rect( size_t x, size_t y, size_t w, size_t h, int r, int g, int b, int a );
+		void	stroke_rect( size_t x, size_t y, size_t w, size_t h, int r, int g, int b, int a, size_t lineWidth );
+		void	fill_circle( size_t x, size_t y, size_t radius, int r, int g, int b, int a );
+		void	stroke_circle( size_t x, size_t y, size_t radius, int r, int g, int b, int a, size_t lineWidth );
+		
     protected:
         int							mFrameBufferDevice;
         uint8_t*					mFramebuffer;
