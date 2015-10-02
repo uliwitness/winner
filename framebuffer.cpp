@@ -201,7 +201,82 @@ void	framebuffer::stroke_line( size_t startX, size_t startY, size_t endX, size_t
 	}
 	else
 	{
-		stroke_line( startX, startY, endX, endY, r, g, b, a );
+		float		x, y,
+					dx, dy,
+					xDirection, yDirection,
+					errorTerm = 0,
+					i;
+		
+		// x distance:
+		dx = endX -startX;
+		if( dx < 0 )
+			dx = -dx;
+		
+		// y distance:
+		dy = endY -startY;
+		if( dy < 0 )
+			dy = -dy;
+		
+		// Horizontal line direction:
+		if( endX < startX )
+			xDirection = -1;
+		else if( endX -startX > 0 )
+			xDirection = 1;
+		else
+			xDirection = 0;
+		
+		// Vertical line direction:
+		if( endY < startY )
+			yDirection = -1;
+		else if( endY -startY > 0 )
+			yDirection = 1;
+		else
+			yDirection = 0;
+		
+		// Calculate first pixel:
+		x = startX;
+		y = startY;
+		
+		if( dx > dy )
+		{
+			// More horizontal than vertical:
+			for( i = 0; i <= dx; i++ )
+			{
+				fill_rect( x, y, 1, lineWidth, r, g, b, a );
+				
+				// Move horizontally:
+				x += xDirection;
+				
+				// Check to see whether we need to move vertically:
+				errorTerm += dy;
+				
+				if( errorTerm > dx )
+				{
+					errorTerm -= dx;	// Reset error term.
+					y += yDirection; 	// Move one pixel up. 
+				}
+			}
+		}
+		else
+		{
+			// More vertical than horizontal:
+			for( i = 0; i <= dy; i++ )
+			{
+				fill_rect( x, y, lineWidth, 1, r, g, b, a );
+				
+				// Move vertically:
+				y += yDirection;
+				
+				// Need to move horizontally?
+				errorTerm += dx;
+				
+				if( errorTerm > dy )
+				{
+					errorTerm -= dy;	// Reset error term.
+					x += xDirection; 	// Move one pixel right. 
+				}
+			}
+		}
 	}
 }
 
