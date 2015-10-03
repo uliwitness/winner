@@ -14,6 +14,8 @@ int main()
 	}
 	
 	myfb.image().fill_rect( 0, 0, myfb.image().width(), myfb.image().height(), 0xff, 0xff, 0xff, 0xff );
+	myfb.image().mask().fill_circle( 320, 240, 320, 0xff, 0xff, 0xff, 0xff );
+	
 	myfb.image().fill_rect( 100, 100, 200, 50, 0x00, 0xff, 0x00, 0xff );
 	myfb.image().stroke_rect( 100, 100, 200, 50, 0xff, 0x00, 0x00, 0xff, 1 );
 	myfb.image().stroke_rect( 0, 0, myfb.image().width(), myfb.image().height(), 0x00, 0x00, 0xff, 0xff, 2 );

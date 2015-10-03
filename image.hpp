@@ -10,6 +10,7 @@
 
 #include <cstdint>
 #include <cassert>
+#include <cstring>
 
 
 namespace winner
@@ -19,9 +20,9 @@ namespace winner
     class image
     {
     public:
-		image() : mPixelData(nullptr) {}	// Call init() after this to set up the object.
+		image() : mPixelData(nullptr), mMask(nullptr) {}	// Call init() after this to set up the object.
 		
-		image( size_t inWidth, size_t inHeight ) : mPixelData(nullptr)
+		image( size_t inWidth, size_t inHeight ) : mPixelData(nullptr), mMask(nullptr)
         {
 			init( inWidth, inHeight, nullptr, true, 0, 0, 0, 0 );
 		}
@@ -32,6 +33,9 @@ namespace winner
             {
                 delete [] mPixelData;
             }
+			
+			if( mMask )
+				delete mMask;
         }
 		
 		void		init( size_t inWidth, size_t inHeight, uint8_t* inPixelData = nullptr, bool inFreePixelData = false, size_t inBitsPerPixel = 32, size_t inRowBytes = 0, size_t inXOffset = 0, size_t inYOffset = 0 )
@@ -84,6 +88,14 @@ namespace winner
 		
         void		set_pixel( size_t x, size_t y, int r, int g, int b, int a )
         {
+			if( mMask )
+			{
+				int		r, g, b, a;
+				mMask->get_pixel( x, y, &r, &g, &b, &a );
+				if( a != 0xff )
+					return;
+			}
+			
 			if( mBitsPerPixel == 1 )
 			{
 				uint8_t*	currPixel = mPixelData +(mRowBytes * y) + x / 8;
@@ -110,7 +122,7 @@ namespace winner
                 assert(mBitsPerPixel == 16 || mBitsPerPixel == 32);
         }
 		
-		void		get_pixel( size_t x, size_t y, int* r, int* g, int *b, int *a )
+		void		get_pixel( size_t x, size_t y, int* r, int* g, int *b, int *a ) const
 		{
 			if( mBitsPerPixel == 1 )
 			{
@@ -147,6 +159,12 @@ namespace winner
             else
                 assert(mBitsPerPixel == 16 || mBitsPerPixel == 32);
 		}
+		
+		void	clear()
+		{
+			size_t	frameBufferSize = size_t( mHeight * mRowBytes );
+			memset( mPixelData, 0, frameBufferSize );
+		}
 
 		void	fill_rect( size_t x, size_t y, size_t w, size_t h, int r, int g, int b, int a );
 		void	stroke_rect( size_t x, size_t y, size_t w, size_t h, int r, int g, int b, int a, size_t lineWidth );
@@ -155,6 +173,18 @@ namespace winner
 		void	stroke_line( size_t startX, size_t startY, size_t endX, size_t endY, int r, int g, int b, int a );
 		void	stroke_line( size_t startX, size_t startY, size_t endX, size_t endY, int r, int g, int b, int a, size_t lineWidth );
 		void	draw_image( size_t x, size_t y, const image& inImage );
+		
+		image&	mask()
+		{
+			if( !mMask )
+			{
+				mMask = new image;
+				mMask->init( mWidth, mHeight, nullptr, true, 1 );
+				mMask->clear();
+			}
+			return *mMask;
+		}
+		void	clear_mask()	{ delete mMask; mMask = nullptr; };
 		
     protected:
         uint8_t*					mPixelData;
@@ -165,6 +195,7 @@ namespace winner
 		size_t						mYOffset;
 		size_t						mRowBytes;
 		bool						mFreesPixelData;
+		image*						mMask;
     };
 
 }   /* namespace winner */

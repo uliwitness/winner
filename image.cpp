@@ -14,26 +14,28 @@ namespace winner
 
 void	image::draw_image( size_t x, size_t y, const image& inImage )
 {
-	assert(inImage.bits_per_pixel() == 32);	// Need to implement a get_pixel() that returns the components in a format-agnostic way.
-	assert(inImage.row_bytes() == (inImage.width() * 4));
-
 	size_t maxX = (x +inImage.width()), maxY = (y +inImage.height());
 	
-	if( maxX >= mWidth )
+	if( maxX > mWidth )
 		maxX = mWidth;
-	if( maxY >= mHeight )
+	if( maxY > mHeight )
 		maxY = mHeight;
 	
-	uint8_t*	currPx = inImage.pixel_data();
+	size_t		imgX = 0, imgY = 0;
 	
 	for( size_t currY = y; currY < maxY; currY++ )
 	{
 		for( size_t currX = x; currX < maxX; currX++ )
 		{
-			if( currPx[3] == 0xff )
-				set_pixel( currX, currY, currPx[0], currPx[1], currPx[2], currPx[3] );
-			currPx += 4;
+			int		r, g, b, a;
+			inImage.get_pixel( imgX, imgY, &r, &g, &b, &a );
+			if( a == 0xff )
+				set_pixel( currX, currY, r, g, b, a );
+			imgX++;
 		}
+
+		imgX = 0;
+		imgY++;
 	}
 }
 
