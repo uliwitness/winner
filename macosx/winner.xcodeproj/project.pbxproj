@@ -11,7 +11,7 @@
 		55F477261BBDCBE600F01770 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55F477241BBDCBE600F01770 /* MainMenu.xib */; };
 		55F4772D1BBDCEA900F01770 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 55F4771D1BBDCBE600F01770 /* AppDelegate.mm */; settings = {ASSET_TAGS = (); }; };
 		55F4772E1BBDCEAF00F01770 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F477201BBDCBE600F01770 /* main.m */; settings = {ASSET_TAGS = (); }; };
-		55F477301BBDD16600F01770 /* framebuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 55F4772F1BBDD16600F01770 /* framebuffer.cpp */; settings = {ASSET_TAGS = (); }; };
+		55F477351BBFD40E00F01770 /* image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 55F477331BBFD40E00F01770 /* image.cpp */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,9 +22,10 @@
 		55F477221BBDCBE600F01770 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = macosx/Assets.xcassets; sourceTree = "<group>"; };
 		55F477251BBDCBE600F01770 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		55F477271BBDCBE600F01770 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = macosx/Info.plist; sourceTree = "<group>"; };
-		55F4772F1BBDD16600F01770 /* framebuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = framebuffer.cpp; sourceTree = "<group>"; };
 		55F477311BBDD17300F01770 /* framebuffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = framebuffer.h; path = macosx/framebuffer.h; sourceTree = "<group>"; };
 		55F477321BBDD1C100F01770 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		55F477331BBFD40E00F01770 /* image.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = image.cpp; sourceTree = "<group>"; };
+		55F477341BBFD40E00F01770 /* image.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = image.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,8 +60,9 @@
 			children = (
 				55F4771C1BBDCBE600F01770 /* AppDelegate.h */,
 				55F4771D1BBDCBE600F01770 /* AppDelegate.mm */,
+				55F477341BBFD40E00F01770 /* image.hpp */,
+				55F477331BBFD40E00F01770 /* image.cpp */,
 				55F477311BBDD17300F01770 /* framebuffer.h */,
-				55F4772F1BBDD16600F01770 /* framebuffer.cpp */,
 				55F477321BBDD1C100F01770 /* main.cpp */,
 				55F477221BBDCBE600F01770 /* Assets.xcassets */,
 				55F477241BBDCBE600F01770 /* MainMenu.xib */,
@@ -149,7 +151,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				55F4772E1BBDCEAF00F01770 /* main.m in Sources */,
-				55F477301BBDD16600F01770 /* framebuffer.cpp in Sources */,
+				55F477351BBFD40E00F01770 /* image.cpp in Sources */,
 				55F4772D1BBDCEA900F01770 /* AppDelegate.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

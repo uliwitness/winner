@@ -1,19 +1,30 @@
-#include "framebuffer.h"
+//
+//  image.cpp
+//  winner
+//
+//  Created by Uli Kusterer on 03/10/15.
+//  Copyright © 2015 Uli Kusterer. All rights reserved.
+//
+
+#include "image.hpp"
 
 
 namespace winner
 {
 
-void	framebuffer::draw_image_data( size_t x, size_t y, size_t w, size_t h, uint8_t* data )
+void	image::draw_image( size_t x, size_t y, const image& inImage )
 {
-	size_t maxX = (x +w), maxY = (y +h);
+	assert(inImage.bits_per_pixel() == 32);	// Need to implement a get_pixel() that returns the components in a format-agnostic way.
+	assert(inImage.row_bytes() == (inImage.width() * 4));
+
+	size_t maxX = (x +inImage.width()), maxY = (y +inImage.height());
 	
-	if( maxX >= mVariableScreenProperties.xres )
-		maxX = mVariableScreenProperties.xres;
-	if( maxY >= mVariableScreenProperties.yres )
-		maxY = mVariableScreenProperties.yres;
+	if( maxX >= mWidth )
+		maxX = mWidth;
+	if( maxY >= mHeight )
+		maxY = mHeight;
 	
-	uint8_t*	currPx = data;
+	uint8_t*	currPx = inImage.pixel_data();
 	
 	for( size_t currY = y; currY < maxY; currY++ )
 	{
@@ -24,19 +35,17 @@ void	framebuffer::draw_image_data( size_t x, size_t y, size_t w, size_t h, uint8
 			currPx += 4;
 		}
 	}
-	
-	UpdateFrameBuffer( mVariableScreenProperties.xres, mVariableScreenProperties.yres, mVariableScreenProperties.bits_per_pixel, mFramebuffer );
 }
 
 
-void	framebuffer::fill_rect( size_t x, size_t y, size_t w, size_t h, int r, int g, int b, int a )
+void	image::fill_rect( size_t x, size_t y, size_t w, size_t h, int r, int g, int b, int a )
 {
 	size_t maxX = (x +w), maxY = (y +h);
 	
-	if( maxX >= mVariableScreenProperties.xres )
-		maxX = mVariableScreenProperties.xres;
-	if( maxY >= mVariableScreenProperties.yres )
-		maxY = mVariableScreenProperties.yres;
+	if( maxX >= mWidth )
+		maxX = mWidth;
+	if( maxY >= mHeight )
+		maxY = mHeight;
 	
 	for( size_t currY = y; currY < maxY; currY++ )
 	{
@@ -45,20 +54,18 @@ void	framebuffer::fill_rect( size_t x, size_t y, size_t w, size_t h, int r, int 
 			set_pixel( currX, currY, r, g, b, a );
 		}
 	}
-	
-	UpdateFrameBuffer( mVariableScreenProperties.xres, mVariableScreenProperties.yres, mVariableScreenProperties.bits_per_pixel, mFramebuffer );
 }
 
-void	framebuffer::stroke_rect( size_t x, size_t y, size_t w, size_t h, int r, int g, int b, int a, size_t lineWidth )
+void	image::stroke_rect( size_t x, size_t y, size_t w, size_t h, int r, int g, int b, int a, size_t lineWidth )
 {
 	size_t currY = y;
 	
 	size_t maxX = (x +w), maxY = (y +h);
 	
-	if( maxX >= mVariableScreenProperties.xres )
-		maxX = mVariableScreenProperties.xres;
-	if( maxY >= mVariableScreenProperties.yres )
-		maxY = mVariableScreenProperties.yres;
+	if( maxX >= mWidth )
+		maxX = mWidth;
+	if( maxY >= mHeight )
+		maxY = mHeight;
 	
 	while( currY < (y +lineWidth) && currY < maxY )
 	{
@@ -85,21 +92,19 @@ void	framebuffer::stroke_rect( size_t x, size_t y, size_t w, size_t h, int r, in
 		}
 		currY++;
 	}
-	
-	UpdateFrameBuffer( mVariableScreenProperties.xres, mVariableScreenProperties.yres, mVariableScreenProperties.bits_per_pixel, mFramebuffer );
 }
 
 
-void	framebuffer::fill_circle( size_t x, size_t y, size_t radius, int r, int g, int b, int a )
+void	image::fill_circle( size_t x, size_t y, size_t radius, int r, int g, int b, int a )
 {
 	size_t	radiusSquared = radius * radius;
 	
 	size_t	minX = ((x >= radius) ? (x -radius) : 0), maxX = (x +radius);
-	if( maxX > mVariableScreenProperties.xres )
-		maxX = mVariableScreenProperties.xres -1;
+	if( maxX > mWidth )
+		maxX = mWidth -1;
 	size_t	minY = ((y >= radius) ? (y -radius) : 0), maxY = (y +radius);
-	if( maxY > mVariableScreenProperties.yres )
-		maxY = mVariableScreenProperties.yres -1;
+	if( maxY > mHeight )
+		maxY = mHeight -1;
 	
 	for( size_t currY = minY; currY <= maxY; currY++ )
 	{
@@ -112,17 +117,17 @@ void	framebuffer::fill_circle( size_t x, size_t y, size_t radius, int r, int g, 
 }
 
 
-void	framebuffer::stroke_circle( size_t x, size_t y, size_t radius, int r, int g, int b, int a, size_t lineWidth )
+void	image::stroke_circle( size_t x, size_t y, size_t radius, int r, int g, int b, int a, size_t lineWidth )
 {
 	size_t	radiusSquared = radius * radius;
 	size_t	innerRadiusSquared = (radius -lineWidth) * (radius -lineWidth);
 	
 	size_t	minX = ((x >= radius) ? (x -radius) : 0), maxX = (x +radius);
-	if( maxX > mVariableScreenProperties.xres )
-		maxX = mVariableScreenProperties.xres -1;
+	if( maxX > mWidth )
+		maxX = mWidth -1;
 	size_t	minY = ((y >= radius) ? (y -radius) : 0), maxY = (y +radius);
-	if( maxY > mVariableScreenProperties.yres )
-		maxY = mVariableScreenProperties.yres -1;
+	if( maxY > mHeight )
+		maxY = mHeight -1;
 	
 	for( size_t currY = minY; currY <= maxY; currY++ )
 	{
@@ -136,7 +141,7 @@ void	framebuffer::stroke_circle( size_t x, size_t y, size_t radius, int r, int g
 }
 
 
-void	framebuffer::stroke_line( size_t startX, size_t startY, size_t endX, size_t endY, int r, int g, int b, int a )
+void	image::stroke_line( size_t startX, size_t startY, size_t endX, size_t endY, int r, int g, int b, int a )
 {
 	float		x, y,
 				dx, dy,
@@ -217,7 +222,7 @@ void	framebuffer::stroke_line( size_t startX, size_t startY, size_t endX, size_t
 }
 
 
-void	framebuffer::stroke_line( size_t startX, size_t startY, size_t endX, size_t endY, int r, int g, int b, int a, size_t lineWidth )
+void	image::stroke_line( size_t startX, size_t startY, size_t endX, size_t endY, int r, int g, int b, int a, size_t lineWidth )
 {
 	if( startY == endY || startX == endX )	// horizontal or vertical
 	{
