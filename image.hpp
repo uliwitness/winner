@@ -86,7 +86,7 @@ namespace winner
             else if( mBitsPerPixel == 16 )
             {
                 uint16_t*	pixel = (uint16_t*)currPixel;
-                *pixel = (((b & 0xff) >> 3) << 10) | (((g & 0xff) >> 3) << 5) | ((r & 0xff) >> 3);
+                *pixel = (((r & 0xff) >> 3) << 11) | (((g & 0xff) >> 3) << 6) | (((b & 0xff) >> 2) << 0);
             }
             else
                 assert(mBitsPerPixel == 16 || mBitsPerPixel == 32);
