@@ -81,16 +81,44 @@ namespace winner
             if( mBitsPerPixel == 32 )
             {
                 uint32_t*	pixel = (uint32_t*)currPixel;
-                *pixel = ((a & 0xff) << 24) | ((r & 0xff) << 16) | ((g & 0xff) << 8) | (b & 0xff);
+                *pixel = ((a & 0xff) << 24) | ((b & 0xff) << 16) | ((g & 0xff) << 8) | (r & 0xff);
             }
             else if( mBitsPerPixel == 16 )
             {
                 uint16_t*	pixel = (uint16_t*)currPixel;
-                *pixel = (((r & 0xff) >> 3) << 11) | (((g & 0xff) >> 3) << 6) | (((b & 0xff) >> 2) << 0);
+                *pixel = (((b & 0xff) >> 3) << 11) | (((g & 0xff) >> 3) << 6) | (((r & 0xff) >> 2) << 0);
             }
             else
                 assert(mBitsPerPixel == 16 || mBitsPerPixel == 32);
         }
+		
+		
+		void		get_pixel( size_t x, size_t y, int* r, int* g, int *b, int *a )
+		{
+            uint8_t*	currPixel = pixel_at( x, y );
+            if( mBitsPerPixel == 32 )
+            {
+                uint32_t	pixel = *(uint32_t*)currPixel;
+				*a = (pixel >> 24) & 0xff;
+				*b = (pixel >> 16) & 0xff;
+				*g = (pixel >> 8) & 0xff;
+				*r = pixel & 0xff;
+            }
+            else if( mBitsPerPixel == 16 )
+            {
+                uint16_t	pixel = *(uint16_t*)currPixel;
+				
+				*a = 0xff;	// Don't have alpha in 16 bit. We natively use 16 bits, so the user is reading the screen here, which is always opaque.
+				*b = ((pixel >> 11) << 3) & 0xff;
+				*b |= (*b & 0xE0) >> 5;	// Duplicate the top few bits at the bottom, otherwise 11111 turns into 11111000 instead of 11111111.
+				*g = ((pixel >> 6) << 3) & 0xff;
+				*g |= (*g & 0xE0) >> 5;	// Duplicate the top few bits at the bottom, otherwise 11111 turns into 11111000 instead of 11111111.
+				*r = (pixel << 2) & 0xff;
+				*r |= (*r & 0xC0) >> 6;	// Duplicate the top few bits at the bottom, otherwise 11111 turns into 11111000 instead of 11111111.
+            }
+            else
+                assert(mBitsPerPixel == 16 || mBitsPerPixel == 32);
+		}
 
 		void	fill_rect( size_t x, size_t y, size_t w, size_t h, int r, int g, int b, int a );
 		void	stroke_rect( size_t x, size_t y, size_t w, size_t h, int r, int g, int b, int a, size_t lineWidth );

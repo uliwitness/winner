@@ -38,6 +38,11 @@ int main()
 	myfb.image().draw_image( 110, 110, letterAImage );
 	
 	myfb.flush();	// Currently a no-op on Linux, but needed on Mac for drawing to actually be shown in UI.
-
+	
+	int		r,g,b,a;
+	myfb.image().set_pixel( 4, 4, 0xff, 0x00, 0x00, 0xff );
+	myfb.image().get_pixel( 4, 4, &r, &g, &b, &a );
+	cout << r << " " << g << " " << b << " " << a << endl;
+	
     return 0;
 }
