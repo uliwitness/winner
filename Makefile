@@ -16,4 +16,5 @@ FILES = main.cpp image.cpp
 all: $(TARGET)
   
 $(TARGET): $(FILES)
+	test ! -f $(TARGET) || rm $(TARGET)
 	$(CC) $(CFLAGS) -o $(TARGET) $(FILES) $(LFLAGS)
