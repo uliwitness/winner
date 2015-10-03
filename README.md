@@ -3,8 +3,6 @@ WINNER
 
 An exploration of what it takes to write a window server that runs on top of (Ubuntu) Linux.
 
-There is a project file for the Code::Blocks IDE that you can use to build the test application.
-
 Running
 -------
 
@@ -13,4 +11,4 @@ Running
 Test application
 ----------------
 
-Currently, the test application will erase the frame buffer to white, then fill a green rectangle in it, then immediately return.
+Currently, the test application will erase the frame buffer to white, then draw a few shapes in it, then immediately return.
