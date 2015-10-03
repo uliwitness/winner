@@ -42,9 +42,9 @@ void	image::fill_rect( size_t x, size_t y, size_t w, size_t h, int r, int g, int
 {
 	size_t maxX = (x +w), maxY = (y +h);
 	
-	if( maxX >= mWidth )
+	if( maxX > mWidth )
 		maxX = mWidth;
-	if( maxY >= mHeight )
+	if( maxY > mHeight )
 		maxY = mHeight;
 	
 	for( size_t currY = y; currY < maxY; currY++ )
