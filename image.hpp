@@ -14,6 +14,8 @@
 
 namespace winner
 {
+	using namespace std;
+	
     class image
     {
     public:

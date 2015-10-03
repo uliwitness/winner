@@ -22,7 +22,7 @@
 		55F477221BBDCBE600F01770 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = macosx/Assets.xcassets; sourceTree = "<group>"; };
 		55F477251BBDCBE600F01770 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		55F477271BBDCBE600F01770 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = macosx/Info.plist; sourceTree = "<group>"; };
-		55F477311BBDD17300F01770 /* framebuffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = framebuffer.h; path = macosx/framebuffer.h; sourceTree = "<group>"; };
+		55F477311BBDD17300F01770 /* framebuffer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = framebuffer.hpp; path = macosx/framebuffer.hpp; sourceTree = "<group>"; };
 		55F477321BBDD1C100F01770 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		55F477331BBFD40E00F01770 /* image.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = image.cpp; sourceTree = "<group>"; };
 		55F477341BBFD40E00F01770 /* image.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = image.hpp; sourceTree = "<group>"; };
@@ -62,7 +62,7 @@
 				55F4771D1BBDCBE600F01770 /* AppDelegate.mm */,
 				55F477341BBFD40E00F01770 /* image.hpp */,
 				55F477331BBFD40E00F01770 /* image.cpp */,
-				55F477311BBDD17300F01770 /* framebuffer.h */,
+				55F477311BBDD17300F01770 /* framebuffer.hpp */,
 				55F477321BBDD1C100F01770 /* main.cpp */,
 				55F477221BBDCBE600F01770 /* Assets.xcassets */,
 				55F477241BBDCBE600F01770 /* MainMenu.xib */,

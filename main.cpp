@@ -1,5 +1,5 @@
 #include <iostream>
-#include "framebuffer.h"
+#include "framebuffer.hpp"
 
 using namespace std;
 using namespace winner;
@@ -37,7 +37,7 @@ int main()
 	
 	myfb.image().draw_image( 110, 110, letterAImage );
 	
-	myfb.flush();
+	myfb.flush();	// Currently a no-op on Linux, but needed on Mac for drawing to actually be shown in UI.
 
     return 0;
 }

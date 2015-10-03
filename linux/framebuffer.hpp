@@ -60,7 +60,7 @@ namespace winner
                 return;
             }
 			
-			mImage.init( variableScreenProperties.xres, variableScreenProperties.yres, mFramebuffer, false, size_t variableScreenProperties.bits_per_pixel, fixedScreenProperties.line_length, variableScreenProperties.xoffset, variableScreenProperties.yoffset );
+			mImage.init( variableScreenProperties.xres, variableScreenProperties.yres, mFramebuffer, false, variableScreenProperties.bits_per_pixel, fixedScreenProperties.line_length, variableScreenProperties.xoffset, variableScreenProperties.yoffset );
         }
         ~framebuffer()
         {
@@ -75,11 +75,16 @@ namespace winner
             }
         }
 
-        bool    valid() { return mFrameBufferDevice != -1 && mImage.valid(); }
+        bool    		valid() { return mFrameBufferDevice != -1 && mImage.valid(); }
+
+		winner::image&	image()	{ return mImage; }
+		
+		void			flush()	{}	// No-op, we currently always draw directly to the frame buffer.
 		
     protected:
         int							mFrameBufferDevice;
         uint8_t*					mFramebuffer;
+        winner::image				mImage;
     };
 
 }   /* namespace winner */
