@@ -4,6 +4,30 @@
 namespace winner
 {
 
+void	framebuffer::draw_image_data( size_t x, size_t y, size_t w, size_t h, uint8_t* data )
+{
+	size_t maxX = (x +w), maxY = (y +h);
+	
+	if( maxX >= mVariableScreenProperties.xres )
+		maxX = mVariableScreenProperties.xres;
+	if( maxY >= mVariableScreenProperties.yres )
+		maxY = mVariableScreenProperties.yres;
+	
+	uint8_t*	currPx = data;
+	
+	for( size_t currY = y; currY < maxY; currY++ )
+	{
+		for( size_t currX = x; currX < maxX; currX++ )
+		{
+			if( currPx[3] == 0xff )
+				set_pixel( currX, currY, currPx[0], currPx[1], currPx[2], currPx[3] );
+			currPx += 4;
+		}
+	}
+	
+	UpdateFrameBuffer( mVariableScreenProperties.xres, mVariableScreenProperties.yres, mVariableScreenProperties.bits_per_pixel, mFramebuffer );
+}
+
 
 void	framebuffer::fill_rect( size_t x, size_t y, size_t w, size_t h, int r, int g, int b, int a )
 {
