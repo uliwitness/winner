@@ -44,8 +44,16 @@ int main()
 	myfb.image().set_pixel( 4, 4, 0xff, 0x00, 0x00, 0xee );
 	myfb.image().get_pixel( 4, 4, &r, &g, &b, &a );
 	
-	
-	cout << hex << r << " " << g << " " << b << " " << a << endl;
+	image	mask;
+	mask.init( 33, 12, nullptr, true, 1 );
+	mask.fill_rect( 0, 0 ,mask.width(), mask.height(), 0, 0, 0, 0 );
+	mask.set_pixel( 2, 2, 0xff, 0xff, 0xff, 0xff );
+	mask.get_pixel( 2, 2, &r, &g, &b, &a );
+	if( r != g || g != b || b != 0xff )
+		cout << "Ouch!" << endl;
+	mask.get_pixel( 0, 2, &r, &g, &b, &a );
+	if( r != g || g != b || b != 0x00 )
+		cout << "Ouch too!" << endl;
 	
     return 0;
 }

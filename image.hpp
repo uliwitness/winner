@@ -41,12 +41,17 @@ namespace winner
 			mBitsPerPixel = (inBitsPerPixel != 0) ? inBitsPerPixel : 32;
 			mXOffset = inXOffset;
 			mYOffset = inYOffset;
-			if( inRowBytes == 0 )
-				mRowBytes = mWidth * (mBitsPerPixel / 8);
+			if( inRowBytes == 0 && mBitsPerPixel >= 8 )
+				mRowBytes = mWidth * mBitsPerPixel / 8;
+			else if( inRowBytes == 0 )
+			{
+				mRowBytes = mWidth;
+				if( mWidth % 8 != 0 )
+					mRowBytes += 8 -(mWidth % 8);
+				mRowBytes /= 8;
+			}
 			else
 				mRowBytes = inRowBytes;
-			
-            size_t	frameBufferSize = size_t( mWidth * mHeight * (mBitsPerPixel / 8));
 			
 			if( inPixelData )
 			{
@@ -55,6 +60,8 @@ namespace winner
 			}
 			else
 			{
+				size_t	frameBufferSize = size_t( mHeight * mRowBytes );
+			
 				mPixelData = new uint8_t[ frameBufferSize ];
 				mFreesPixelData = true;
 			}
@@ -77,6 +84,17 @@ namespace winner
 		
         void		set_pixel( size_t x, size_t y, int r, int g, int b, int a )
         {
+			if( mBitsPerPixel == 1 )
+			{
+				uint8_t*	currPixel = mPixelData +(mRowBytes * y) + x / 8;
+				size_t		pixelBit = x % 8;
+				if( r == g && g == b && r == 0xff )
+					*currPixel |= (1 << pixelBit);
+				else
+					*currPixel &= ~(1 << pixelBit);
+				return;
+			}
+			
             uint8_t*	currPixel = pixel_at( x, y );
             if( mBitsPerPixel == 32 )
             {
@@ -92,9 +110,19 @@ namespace winner
                 assert(mBitsPerPixel == 16 || mBitsPerPixel == 32);
         }
 		
-		
 		void		get_pixel( size_t x, size_t y, int* r, int* g, int *b, int *a )
 		{
+			if( mBitsPerPixel == 1 )
+			{
+				uint8_t*	currPixel = mPixelData +(mRowBytes * y) + x / 8;
+				size_t		pixelBit = x % 8;
+				if( (*currPixel) & (1 << pixelBit) )
+					*r = *g = *b = *a = 0xff;
+				else
+					*r = *g = *b = *a = 0x00;
+				return;
+			}
+			
             uint8_t*	currPixel = pixel_at( x, y );
             if( mBitsPerPixel == 32 )
             {
