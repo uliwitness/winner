@@ -86,7 +86,7 @@ namespace winner
             else if( mBitsPerPixel == 16 )
             {
                 uint16_t*	pixel = (uint16_t*)currPixel;
-                *pixel = (((b & 0xff) >> 3) << 11) | (((g & 0xff) >> 3) << 6) | (((r & 0xff) >> 2) << 0);
+                *pixel = (((r & 0xff) >> 3) << 11) | (((g & 0xff) >> 3) << 6) | (((b & 0xff) >> 2) << 0);
             }
             else
                 assert(mBitsPerPixel == 16 || mBitsPerPixel == 32);
@@ -109,12 +109,12 @@ namespace winner
                 uint16_t	pixel = *(uint16_t*)currPixel;
 				
 				*a = 0xff;	// Don't have alpha in 16 bit. We natively use 16 bits, so the user is reading the screen here, which is always opaque.
-				*b = ((pixel >> 11) << 3) & 0xff;
-				*b |= (*b & 0xE0) >> 5;	// Duplicate the top few bits at the bottom, otherwise 11111 turns into 11111000 instead of 11111111.
+				*r = ((pixel >> 11) << 3) & 0xff;
+				*r |= (*r & 0xE0) >> 5;	// Duplicate the top few bits at the bottom, otherwise 11111 turns into 11111000 instead of 11111111.
 				*g = ((pixel >> 6) << 3) & 0xff;
 				*g |= (*g & 0xE0) >> 5;	// Duplicate the top few bits at the bottom, otherwise 11111 turns into 11111000 instead of 11111111.
-				*r = (pixel << 2) & 0xff;
-				*r |= (*r & 0xC0) >> 6;	// Duplicate the top few bits at the bottom, otherwise 11111 turns into 11111000 instead of 11111111.
+				*b = (pixel << 2) & 0xff;
+				*b |= (*b & 0xC0) >> 6;	// Duplicate the top few bits at the bottom, otherwise 11111 turns into 11111000 instead of 11111111.
             }
             else
                 assert(mBitsPerPixel == 16 || mBitsPerPixel == 32);
