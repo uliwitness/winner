@@ -14,14 +14,19 @@ int main()
 	}
 	
 	myfb.image().fill_rect( 0, 0, myfb.image().width(), myfb.image().height(), 0xff, 0xff, 0xff, 0xff );
-	myfb.image().mask().fill_circle( 320, 240, 320, 0xff, 0xff, 0xff, 0xff );
+	myfb.image().mask().clear( 0xff );
+	myfb.image().mask().fill_circle( 1, 240, 240, 0, 0, 0, 0 );
 	
 	myfb.image().fill_rect( 100, 100, 200, 50, 0x00, 0xff, 0x00, 0xff );
+	
+	myfb.image().remove_mask();
+	
 	myfb.image().stroke_rect( 100, 100, 200, 50, 0xff, 0x00, 0x00, 0xff, 1 );
 	myfb.image().stroke_rect( 0, 0, myfb.image().width(), myfb.image().height(), 0x00, 0x00, 0xff, 0xff, 2 );
 	myfb.image().fill_circle( 170, 170, 50, 0xff, 0x00, 0x00, 0xff );
 	myfb.image().stroke_circle( 170, 170, 50, 0xff, 0x00, 0xff, 0xff, 1 );
 	myfb.image().stroke_circle( 30, 30, 40, 0xff, 0xee, 0xee, 0xff, 4 );
+	
 	myfb.image().stroke_line( 40, 80, 600, 400, 0x00, 0xff, 0xee, 0xff, 3 );
 	myfb.image().stroke_line( 40, 80, 600, 80, 0x00, 0x00, 0x00, 0xff, 4 );
 	myfb.image().stroke_line( 40, 80, 40, 400, 0x00, 0x00, 0x00, 0xff, 4 );

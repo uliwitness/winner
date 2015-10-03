@@ -160,10 +160,17 @@ namespace winner
                 assert(mBitsPerPixel == 16 || mBitsPerPixel == 32);
 		}
 		
-		void	clear()
+		void	clear( uint8_t alpha )
 		{
-			size_t	frameBufferSize = size_t( mHeight * mRowBytes );
-			memset( mPixelData, 0, frameBufferSize );
+			if( !mFreesPixelData )
+			{
+				fill_rect( 0, 0, mWidth, mHeight, alpha, alpha, alpha, alpha );
+			}
+			else
+			{
+				size_t	frameBufferSize = size_t( mHeight * mRowBytes );
+				memset( mPixelData, alpha, frameBufferSize );
+			}
 		}
 
 		void	fill_rect( size_t x, size_t y, size_t w, size_t h, int r, int g, int b, int a );
@@ -180,11 +187,11 @@ namespace winner
 			{
 				mMask = new image;
 				mMask->init( mWidth, mHeight, nullptr, true, 1 );
-				mMask->clear();
+				mMask->clear( 0xff );
 			}
 			return *mMask;
 		}
-		void	clear_mask()	{ delete mMask; mMask = nullptr; };
+		void	remove_mask()	{ if( mMask ) { delete mMask; mMask = nullptr; } };
 		
     protected:
         uint8_t*					mPixelData;
