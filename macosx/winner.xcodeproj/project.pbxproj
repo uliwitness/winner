@@ -12,6 +12,7 @@
 		55F4772D1BBDCEA900F01770 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 55F4771D1BBDCBE600F01770 /* AppDelegate.mm */; settings = {ASSET_TAGS = (); }; };
 		55F4772E1BBDCEAF00F01770 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F477201BBDCBE600F01770 /* main.m */; settings = {ASSET_TAGS = (); }; };
 		55F477351BBFD40E00F01770 /* image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 55F477331BBFD40E00F01770 /* image.cpp */; settings = {ASSET_TAGS = (); }; };
+		55F4773B1BC17B0C00F01770 /* window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 55F477391BC17B0C00F01770 /* window.cpp */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,8 @@
 		55F477321BBDD1C100F01770 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		55F477331BBFD40E00F01770 /* image.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = image.cpp; sourceTree = "<group>"; };
 		55F477341BBFD40E00F01770 /* image.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = image.hpp; sourceTree = "<group>"; };
+		55F477391BC17B0C00F01770 /* window.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = window.cpp; sourceTree = "<group>"; };
+		55F4773A1BC17B0C00F01770 /* window.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = window.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +63,8 @@
 			children = (
 				55F4771C1BBDCBE600F01770 /* AppDelegate.h */,
 				55F4771D1BBDCBE600F01770 /* AppDelegate.mm */,
+				55F4773A1BC17B0C00F01770 /* window.hpp */,
+				55F477391BC17B0C00F01770 /* window.cpp */,
 				55F477341BBFD40E00F01770 /* image.hpp */,
 				55F477331BBFD40E00F01770 /* image.cpp */,
 				55F477311BBDD17300F01770 /* framebuffer.hpp */,
@@ -153,6 +158,7 @@
 				55F4772E1BBDCEAF00F01770 /* main.m in Sources */,
 				55F477351BBFD40E00F01770 /* image.cpp in Sources */,
 				55F4772D1BBDCEA900F01770 /* AppDelegate.mm in Sources */,
+				55F4773B1BC17B0C00F01770 /* window.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

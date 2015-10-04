@@ -20,9 +20,9 @@ namespace winner
     class image
     {
     public:
-		image() : mPixelData(nullptr), mMask(nullptr) {}	// Call init() after this to set up the object.
+		image() : mPixelData(nullptr), mMask(nullptr), mFreesPixelData(false) {}	// Call init() after this to set up the object.
 		
-		image( size_t inWidth, size_t inHeight ) : mPixelData(nullptr), mMask(nullptr)
+		image( size_t inWidth, size_t inHeight ) : mPixelData(nullptr), mMask(nullptr), mFreesPixelData(false)
         {
 			init( inWidth, inHeight, nullptr, true, 0, 0, 0, 0 );
 		}
@@ -38,8 +38,11 @@ namespace winner
 				delete mMask;
         }
 		
-		void		init( size_t inWidth, size_t inHeight, uint8_t* inPixelData = nullptr, bool inFreePixelData = false, size_t inBitsPerPixel = 32, size_t inRowBytes = 0, size_t inXOffset = 0, size_t inYOffset = 0 )
+		void		init( size_t inWidth, size_t inHeight, uint8_t* inPixelData = nullptr, bool inFreePixelData = false, size_t inBitsPerPixel = 32, size_t inRowBytes = 0, size_t inXOffset = 0, size_t inYOffset = 0 )	// May be called several times to re-allocate a buffer.
         {
+			if( mPixelData && mFreesPixelData )
+				delete [] mPixelData;
+			
 			mWidth = inWidth;
 			mHeight = inHeight;
 			mBitsPerPixel = (inBitsPerPixel != 0) ? inBitsPerPixel : 32;
@@ -80,6 +83,8 @@ namespace winner
 		void		set_frees_pixel_data( bool inState )	{ mFreesPixelData = inState; }
 		bool		get_frees_pixel_data( bool inState )	{ return mFreesPixelData; }
 		size_t		row_bytes() const						{ return mRowBytes; }
+		size_t		x_offset() const						{ return mXOffset; }
+		size_t		y_offset() const						{ return mYOffset; }
 
         uint8_t*	pixel_at( size_t x, size_t y ) const
         {
@@ -187,7 +192,7 @@ namespace winner
 			{
 				mMask = new image;
 				mMask->init( mWidth, mHeight, nullptr, true, 1 );
-				mMask->clear( 0xff );
+				mMask->clear( 0x00 );
 			}
 			return *mMask;
 		}

@@ -11,7 +11,7 @@ LFLAGS =
   
 # the name to use for both the target source file, and the output file:
 TARGET = winner
-FILES = main.cpp image.cpp
+FILES = main.cpp image.cpp window.cpp
   
 all: $(TARGET)
   
