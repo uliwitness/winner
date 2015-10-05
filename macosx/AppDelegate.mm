@@ -15,7 +15,9 @@ extern "C" void	UpdateFrameBuffer( size_t w, size_t h, size_t bpp, uint8_t* buff
 	NSBitmapImageRep*	bir = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes: &buffer pixelsWide: w pixelsHigh: h bitsPerSample: bpp / 4 samplesPerPixel: 4 hasAlpha: YES isPlanar: NO colorSpaceName:NSCalibratedRGBColorSpace bitmapFormat: 0 bytesPerRow: (w * bpp) / 8 bitsPerPixel: bpp];
 	[img addRepresentation: bir];
 	
-	[(AppDelegate*)[[NSApplication sharedApplication] delegate] imageView].image = img;
+	NSImageView	*	iv = [(AppDelegate*)[[NSApplication sharedApplication] delegate] imageView];
+	iv.image = img;
+	[iv.window displayIfNeeded];
 }
 
 

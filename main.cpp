@@ -31,6 +31,8 @@ int main()
 	
 	myfb.flush();
 	
+	sleep(3);
+	
 //	myfb.image().mask().clear( 0xff );
 //	myfb.image().mask().fill_circle( 1, 240, 240, 0, 0, 0, 0 );
 //	
