@@ -209,6 +209,7 @@ namespace winner
 		void	stroke_line( coordinate_t startX, coordinate_t startY, coordinate_t endX, coordinate_t endY, color_component_t r, color_component_t g, color_component_t b, color_component_t a );
 		void	stroke_line( coordinate_t startX, coordinate_t startY, coordinate_t endX, coordinate_t endY, color_component_t r, color_component_t g, color_component_t b, color_component_t a, coordinate_t lineWidth );
 		void	draw_image( coordinate_t x, coordinate_t y, const image& inImage );
+		void	clear_image( coordinate_t x, coordinate_t y, const image& inImage );
 		
 		image&	mask()
 		{
@@ -221,6 +222,7 @@ namespace winner
 			return *mMask;
 		}
 		void	remove_mask()	{ if( mMask ) { delete mMask; mMask = nullptr; } };
+		bool	has_mask()		{ return mMask != nullptr; }
 		
 		image&	sys_mask()
 		{
@@ -232,6 +234,7 @@ namespace winner
 			return *mSysMask;
 		}
 		void	remove_sys_mask()	{ if( mSysMask ) { delete mSysMask; mSysMask = nullptr; } };
+		bool	has_sys_mask()		{ return mMask != nullptr; }
 		
     protected:
         uint8_t*					mPixelData;

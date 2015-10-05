@@ -40,6 +40,34 @@ void	image::draw_image( coordinate_t x, coordinate_t y, const image& inImage )
 }
 
 
+void	image::clear_image( coordinate_t x, coordinate_t y, const image& inImage )
+{
+	coordinate_t maxX = (x +inImage.width()), maxY = (y +inImage.height());
+	
+	if( maxX > mWidth )
+		maxX = mWidth;
+	if( maxY > mHeight )
+		maxY = mHeight;
+	coordinate_t	xclip = (x > 0)? x : 0, yclip = (y > 0)? y : 0;
+	coordinate_t	imgX = xclip, imgY = yclip;
+	
+	for( coordinate_t currY = yclip; currY < maxY; currY++ )
+	{
+		for( coordinate_t currX = xclip; currX < maxX; currX++ )
+		{
+			color_component_t		r, g, b, a;
+			inImage.get_pixel( imgX, imgY, &r, &g, &b, &a );
+			if( a == 0xff )
+				set_pixel( currX, currY, 0x00, 0x00, 0x00, 0x00 );
+			imgX++;
+		}
+
+		imgX = xclip;
+		imgY++;
+	}
+}
+
+
 void	image::fill_rect( coordinate_t x, coordinate_t y, coordinate_t w, coordinate_t h, color_component_t r, color_component_t g, color_component_t b, color_component_t a )
 {
 	coordinate_t	maxX = (x +w), maxY = (y +h);

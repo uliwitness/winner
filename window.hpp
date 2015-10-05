@@ -8,6 +8,26 @@
 
 #pragma once
 
+/*
+	The window class describes a sub-area of the screen that may be drawn to. It is affected by
+	both of the image's masks:
+	
+	The regular mask is used to designate the shape of the window. E.g. if you wanted a circular window,
+	you'd mask off everything outside the circle. If we had MacOS-Classic-style single memory space,
+	we'd want three masks, one for cutting off windows above, one for the window shape, and one for
+	drawing. But since this is for a window server running as a separate process, we can get away with
+	two because the drawing of window contents happens in another process, and all we get is a bitmap.
+	
+	The system mask of the window is used to restrict drawing even further, by removing the area
+	occupied by all other windows above ours from the regular mask. That way, you can draw even into
+	an obscured window without having to redraw any of the other windows. This happens in
+	rebuild_sys_mask_for_window().
+	
+	If we wanted to support alpha blending (i.e. more than 100% opaque and 100% transparent) we would
+	have to overdraw those areas. I.e. every time they are changed, windows below us would need to be
+	redrawn, too.
+*/
+
 
 #include "image.hpp"
 #include <vector>
@@ -107,6 +127,8 @@ public:
 			r -= inWindow->image().x_offset();
 			b -= inWindow->image().y_offset();
 			
+			// Lazily create our mask if needed (unobscured windows can then skip the memory
+			//	overhead and the slowdown of even checking the mask)
 			if( !didMakeMask )
 			{
 				inWindow->image().sys_mask().clear( 0xff );	// Window's whole surface can be drawn on.
@@ -114,7 +136,14 @@ public:
 			}
 			
 			// Remove that chunk from our mask.
-			inWindow->image().sys_mask().fill_rect( l, t, r -l, b -t, 0x00, 0x00, 0x00, 0x00 );
+			if( (**currWindow).image().has_mask() )
+			{
+				inWindow->image().sys_mask().clear_image( (**currWindow).image().x_offset() -inWindow->image().x_offset(), (**currWindow).image().y_offset() -inWindow->image().y_offset(), (**currWindow).image().mask() );
+			}
+			else
+			{
+				inWindow->image().sys_mask().fill_rect( l, t, r - l, b - t, 0x00, 0x00, 0x00, 0x00 );
+			}
 		}
 	}
 	
