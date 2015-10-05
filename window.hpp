@@ -67,9 +67,9 @@ public:
 		}
 	}
 	
-	void	rebuild_mask_for_window( window* inWindow )
+	void	rebuild_sys_mask_for_window( window* inWindow )
 	{
-		inWindow->image().mask().clear( 0xff );	// Window's whole surface can be drawn on.
+		inWindow->image().sys_mask().clear( 0xff );	// Window's whole surface can be drawn on.
 		for( auto currWindow = mWindows.begin(); currWindow != mWindows.end(); currWindow++ )
 		{
 			if( *currWindow == inWindow )
@@ -108,7 +108,7 @@ public:
 			b -= inWindow->image().y_offset();
 			
 			// Remove that chunk from our mask.
-			inWindow->image().mask().fill_rect( l, t, r -l, b -t, 0x00, 0x00, 0x00, 0x00 );
+			inWindow->image().sys_mask().fill_rect( l, t, r -l, b -t, 0x00, 0x00, 0x00, 0x00 );
 		}
 	}
 	

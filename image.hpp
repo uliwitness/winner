@@ -20,9 +20,9 @@ namespace winner
     class image
     {
     public:
-		image() : mPixelData(nullptr), mMask(nullptr), mFreesPixelData(false) {}	// Call init() after this to set up the object.
+		image() : mPixelData(nullptr), mMask(nullptr), mSysMask(nullptr), mFreesPixelData(false) {}	// Call init() after this to set up the object.
 		
-		image( size_t inWidth, size_t inHeight ) : mPixelData(nullptr), mMask(nullptr), mFreesPixelData(false)
+		image( size_t inWidth, size_t inHeight ) : mPixelData(nullptr), mMask(nullptr), mSysMask(nullptr), mFreesPixelData(false)
         {
 			init( inWidth, inHeight, nullptr, true, 0, 0, 0, 0 );
 		}
@@ -36,6 +36,9 @@ namespace winner
 			
 			if( mMask )
 				delete mMask;
+			
+			if( mSysMask )
+				delete mSysMask;
         }
 		
 		void		init( size_t inWidth, size_t inHeight, uint8_t* inPixelData = nullptr, bool inFreePixelData = false, size_t inBitsPerPixel = 32, size_t inRowBytes = 0, size_t inXOffset = 0, size_t inYOffset = 0 )	// May be called several times to re-allocate a buffer.
@@ -97,6 +100,14 @@ namespace winner
 			{
 				int		r, g, b, a;
 				mMask->get_pixel( x, y, &r, &g, &b, &a );
+				if( a != 0xff )
+					return;
+			}
+			
+			if( mSysMask )
+			{
+				int		r, g, b, a;
+				mSysMask->get_pixel( x, y, &r, &g, &b, &a );
 				if( a != 0xff )
 					return;
 			}
@@ -198,6 +209,17 @@ namespace winner
 		}
 		void	remove_mask()	{ if( mMask ) { delete mMask; mMask = nullptr; } };
 		
+		image&	sys_mask()
+		{
+			if( !mSysMask )
+			{
+				mSysMask = new image;
+				mSysMask->init( mWidth, mHeight, nullptr, true, 1 );
+			}
+			return *mSysMask;
+		}
+		void	remove_sys_mask()	{ if( mSysMask ) { delete mSysMask; mSysMask = nullptr; } };
+		
     protected:
         uint8_t*					mPixelData;
 		size_t						mWidth;
@@ -208,6 +230,7 @@ namespace winner
 		size_t						mRowBytes;
 		bool						mFreesPixelData;
 		image*						mMask;
+		image*						mSysMask;
     };
 
 }   /* namespace winner */

@@ -21,8 +21,8 @@ int main()
 	window*	aWindow = windowList.create_window( 100, 100, 320, 200 );
 	window*	bWindow = windowList.create_window( 116, 116, 320, 200 );
 	
-	windowList.rebuild_mask_for_window( aWindow );
-	windowList.rebuild_mask_for_window( bWindow );
+	windowList.rebuild_sys_mask_for_window( aWindow );
+	windowList.rebuild_sys_mask_for_window( bWindow );
 	
 	bWindow->image().fill_rect(0, 0, aWindow->image().width(), aWindow->image().height(), 0x00, 0x00, 0xff, 0xff );
 	bWindow->image().fill_circle( 170, 170, 50, 0x00, 0xff, 0x00, 0xff );
