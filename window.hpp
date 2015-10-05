@@ -26,7 +26,7 @@ public:
 protected:
 	friend class window_list;
 	
-	window( size_t x, size_t y, size_t w, size_t h, winner::image& inFramebufferImage ) : mFramebufferImage(inFramebufferImage)
+	window( coordinate_t x, coordinate_t y, coordinate_t w, coordinate_t h, winner::image& inFramebufferImage ) : mFramebufferImage(inFramebufferImage)
 	{
 		mImage.init( w, h, mFramebufferImage.pixel_data(), false, mFramebufferImage.bits_per_pixel(), mFramebufferImage.row_bytes(), x, y );
 	}
@@ -46,7 +46,7 @@ public:
 			delete *currWindow;
 	}
 	
-	window*		create_window( size_t x, size_t y, size_t w, size_t h )
+	window*		create_window( coordinate_t x, coordinate_t y, coordinate_t w, coordinate_t h )
 	{
 		window*	theWindow = new window( x, y, w, h, mFramebufferImage );
 		mWindows.insert( mWindows.begin(), theWindow );
@@ -69,13 +69,13 @@ public:
 	
 	void	rebuild_sys_mask_for_window( window* inWindow )
 	{
-		inWindow->image().sys_mask().clear( 0xff );	// Window's whole surface can be drawn on.
+		bool		didMakeMask = false;
 		for( auto currWindow = mWindows.begin(); currWindow != mWindows.end(); currWindow++ )
 		{
 			if( *currWindow == inWindow )
 				break;
 			
-			size_t l, t, r, b;
+			coordinate_t l, t, r, b;
 			
 			// Calculate rectangle where currWindow overlaps with inWindow:
 			if( (**currWindow).image().x_offset() < inWindow->image().x_offset() )
@@ -106,6 +106,12 @@ public:
 			t -= inWindow->image().y_offset();
 			r -= inWindow->image().x_offset();
 			b -= inWindow->image().y_offset();
+			
+			if( !didMakeMask )
+			{
+				inWindow->image().sys_mask().clear( 0xff );	// Window's whole surface can be drawn on.
+				didMakeMask = true;
+			}
 			
 			// Remove that chunk from our mask.
 			inWindow->image().sys_mask().fill_rect( l, t, r -l, b -t, 0x00, 0x00, 0x00, 0x00 );

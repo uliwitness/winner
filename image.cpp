@@ -12,57 +12,58 @@
 namespace winner
 {
 
-void	image::draw_image( size_t x, size_t y, const image& inImage )
+void	image::draw_image( coordinate_t x, coordinate_t y, const image& inImage )
 {
-	size_t maxX = (x +inImage.width()), maxY = (y +inImage.height());
+	coordinate_t maxX = (x +inImage.width()), maxY = (y +inImage.height());
 	
 	if( maxX > mWidth )
 		maxX = mWidth;
 	if( maxY > mHeight )
 		maxY = mHeight;
+	coordinate_t	xclip = (x > 0)? x : 0, yclip = (y > 0)? y : 0;
+	coordinate_t	imgX = xclip, imgY = yclip;
 	
-	size_t		imgX = 0, imgY = 0;
-	
-	for( size_t currY = y; currY < maxY; currY++ )
+	for( coordinate_t currY = yclip; currY < maxY; currY++ )
 	{
-		for( size_t currX = x; currX < maxX; currX++ )
+		for( coordinate_t currX = xclip; currX < maxX; currX++ )
 		{
-			int		r, g, b, a;
+			color_component_t		r, g, b, a;
 			inImage.get_pixel( imgX, imgY, &r, &g, &b, &a );
 			if( a == 0xff )
 				set_pixel( currX, currY, r, g, b, a );
 			imgX++;
 		}
 
-		imgX = 0;
+		imgX = xclip;
 		imgY++;
 	}
 }
 
 
-void	image::fill_rect( size_t x, size_t y, size_t w, size_t h, int r, int g, int b, int a )
+void	image::fill_rect( coordinate_t x, coordinate_t y, coordinate_t w, coordinate_t h, color_component_t r, color_component_t g, color_component_t b, color_component_t a )
 {
-	size_t maxX = (x +w), maxY = (y +h);
+	coordinate_t	maxX = (x +w), maxY = (y +h);
+	coordinate_t	xclip = (x > 0)? x : 0, yclip = (y > 0)? y : 0;
 	
 	if( maxX > mWidth )
 		maxX = mWidth;
 	if( maxY > mHeight )
 		maxY = mHeight;
 	
-	for( size_t currY = y; currY < maxY; currY++ )
+	for( coordinate_t currY = yclip; currY < maxY; currY++ )
 	{
-		for( size_t currX = x; currX < maxX; currX++ )
+		for( coordinate_t currX = xclip; currX < maxX; currX++ )
 		{
 			set_pixel( currX, currY, r, g, b, a );
 		}
 	}
 }
 
-void	image::stroke_rect( size_t x, size_t y, size_t w, size_t h, int r, int g, int b, int a, size_t lineWidth )
+void	image::stroke_rect( coordinate_t x, coordinate_t y, coordinate_t w, coordinate_t h, color_component_t r, color_component_t g, color_component_t b, color_component_t a, coordinate_t lineWidth )
 {
-	size_t currY = y;
-	
-	size_t maxX = (x +w), maxY = (y +h);
+	coordinate_t	maxX = (x +w), maxY = (y +h);
+	coordinate_t	xclip = (x > 0)? x : 0, yclip = (y > 0)? y : 0;
+	coordinate_t	currY = yclip;
 	
 	if( maxX >= mWidth )
 		maxX = mWidth;
@@ -71,7 +72,7 @@ void	image::stroke_rect( size_t x, size_t y, size_t w, size_t h, int r, int g, i
 	
 	while( currY < (y +lineWidth) && currY < maxY )
 	{
-		for( size_t currX = x; currX < maxX; currX++ )
+		for( coordinate_t currX = xclip; currX < maxX; currX++ )
 		{
 			set_pixel( currX, currY, r, g, b, a );
 		}
@@ -80,15 +81,15 @@ void	image::stroke_rect( size_t x, size_t y, size_t w, size_t h, int r, int g, i
 	
 	for( ; currY < (maxY -lineWidth); currY++ )
 	{
-		for( size_t currX = x; currX < (x+lineWidth); currX++ )
+		for( coordinate_t currX = xclip; currX < (x+lineWidth); currX++ )
 			set_pixel( currX, currY, r, g, b, a );
-		for( size_t currX = x +w -lineWidth; currX < (x+w); currX++ )
+		for( coordinate_t currX = x +w -lineWidth; currX < (x+w); currX++ )
 			set_pixel( currX, currY, r, g, b, a );
 	}
 	
 	while( currY < maxY )
 	{
-		for( size_t currX = x; currX < maxX; currX++ )
+		for( coordinate_t currX = xclip; currX < maxX; currX++ )
 		{
 			set_pixel( currX, currY, r, g, b, a );
 		}
@@ -97,20 +98,20 @@ void	image::stroke_rect( size_t x, size_t y, size_t w, size_t h, int r, int g, i
 }
 
 
-void	image::fill_circle( size_t x, size_t y, size_t radius, int r, int g, int b, int a )
+void	image::fill_circle( coordinate_t x, coordinate_t y, coordinate_t radius, color_component_t r, color_component_t g, color_component_t b, color_component_t a )
 {
-	size_t	radiusSquared = radius * radius;
+	coordinate_t	radiusSquared = radius * radius;
 	
-	size_t	minX = ((x >= radius) ? (x -radius) : 0), maxX = (x +radius);
+	coordinate_t	minX = ((x >= radius) ? (x -radius) : 0), maxX = (x +radius);
 	if( maxX > mWidth )
 		maxX = mWidth -1;
-	size_t	minY = ((y >= radius) ? (y -radius) : 0), maxY = (y +radius);
+	coordinate_t	minY = ((y >= radius) ? (y -radius) : 0), maxY = (y +radius);
 	if( maxY > mHeight )
 		maxY = mHeight -1;
 	
-	for( size_t currY = minY; currY <= maxY; currY++ )
+	for( coordinate_t currY = minY; currY <= maxY; currY++ )
 	{
-		for( size_t currX = minX; currX <= maxX; currX++ )
+		for( coordinate_t currX = minX; currX <= maxX; currX++ )
 		{
 			if( radiusSquared > ((currX-x)*(currX-x)+(currY-y)*(currY-y)) )
 				set_pixel( currX, currY, r, g, b, a );
@@ -119,21 +120,21 @@ void	image::fill_circle( size_t x, size_t y, size_t radius, int r, int g, int b,
 }
 
 
-void	image::stroke_circle( size_t x, size_t y, size_t radius, int r, int g, int b, int a, size_t lineWidth )
+void	image::stroke_circle( coordinate_t x, coordinate_t y, coordinate_t radius, color_component_t r, color_component_t g, color_component_t b, color_component_t a, coordinate_t lineWidth )
 {
-	size_t	radiusSquared = radius * radius;
-	size_t	innerRadiusSquared = (radius -lineWidth) * (radius -lineWidth);
+	coordinate_t	radiusSquared = radius * radius;
+	coordinate_t	innerRadiusSquared = (radius -lineWidth) * (radius -lineWidth);
 	
-	size_t	minX = ((x >= radius) ? (x -radius) : 0), maxX = (x +radius);
+	coordinate_t	minX = ((x >= radius) ? (x -radius) : 0), maxX = (x +radius);
 	if( maxX > mWidth )
 		maxX = mWidth -1;
-	size_t	minY = ((y >= radius) ? (y -radius) : 0), maxY = (y +radius);
+	coordinate_t	minY = ((y >= radius) ? (y -radius) : 0), maxY = (y +radius);
 	if( maxY > mHeight )
 		maxY = mHeight -1;
 	
-	for( size_t currY = minY; currY <= maxY; currY++ )
+	for( coordinate_t currY = minY; currY <= maxY; currY++ )
 	{
-		for( size_t currX = minX; currX <= maxX; currX++ )
+		for( coordinate_t currX = minX; currX <= maxX; currX++ )
 		{
 			if( radiusSquared > ((currX-x)*(currX-x)+(currY-y)*(currY-y))
 				&& innerRadiusSquared <= ((currX-x)*(currX-x)+(currY-y)*(currY-y)) )
@@ -143,7 +144,7 @@ void	image::stroke_circle( size_t x, size_t y, size_t radius, int r, int g, int 
 }
 
 
-void	image::stroke_line( size_t startX, size_t startY, size_t endX, size_t endY, int r, int g, int b, int a )
+void	image::stroke_line( coordinate_t startX, coordinate_t startY, coordinate_t endX, coordinate_t endY, color_component_t r, color_component_t g, color_component_t b, color_component_t a )
 {
 	float		x, y,
 				dx, dy,
@@ -224,7 +225,7 @@ void	image::stroke_line( size_t startX, size_t startY, size_t endX, size_t endY,
 }
 
 
-void	image::stroke_line( size_t startX, size_t startY, size_t endX, size_t endY, int r, int g, int b, int a, size_t lineWidth )
+void	image::stroke_line( coordinate_t startX, coordinate_t startY, coordinate_t endX, coordinate_t endY, color_component_t r, color_component_t g, color_component_t b, color_component_t a, coordinate_t lineWidth )
 {
 	if( startY == endY || startX == endX )	// horizontal or vertical
 	{

@@ -17,12 +17,15 @@ namespace winner
 {
 	using namespace std;
 	
+	typedef int32_t	coordinate_t;
+	typedef uint8_t	color_component_t;
+	
     class image
     {
     public:
 		image() : mPixelData(nullptr), mMask(nullptr), mSysMask(nullptr), mFreesPixelData(false) {}	// Call init() after this to set up the object.
 		
-		image( size_t inWidth, size_t inHeight ) : mPixelData(nullptr), mMask(nullptr), mSysMask(nullptr), mFreesPixelData(false)
+		image( coordinate_t inWidth, coordinate_t inHeight ) : mPixelData(nullptr), mMask(nullptr), mSysMask(nullptr), mFreesPixelData(false)
         {
 			init( inWidth, inHeight, nullptr, true, 0, 0, 0, 0 );
 		}
@@ -41,7 +44,7 @@ namespace winner
 				delete mSysMask;
         }
 		
-		void		init( size_t inWidth, size_t inHeight, uint8_t* inPixelData = nullptr, bool inFreePixelData = false, size_t inBitsPerPixel = 32, size_t inRowBytes = 0, size_t inXOffset = 0, size_t inYOffset = 0 )	// May be called several times to re-allocate a buffer.
+		void		init( coordinate_t inWidth, coordinate_t inHeight, uint8_t* inPixelData = nullptr, bool inFreePixelData = false, size_t inBitsPerPixel = 32, size_t inRowBytes = 0, coordinate_t inXOffset = 0, coordinate_t inYOffset = 0 )	// May be called several times to re-allocate a buffer.
         {
 			if( mPixelData && mFreesPixelData )
 				delete [] mPixelData;
@@ -77,28 +80,33 @@ namespace winner
 			}
         }
 
-        bool		valid() const							{ return mPixelData != nullptr; }
+        bool			valid() const							{ return mPixelData != nullptr; }
 
-        size_t		bits_per_pixel() const					{ return mBitsPerPixel; }
-        size_t		width() const							{ return mWidth; }
-        size_t		height() const							{ return mHeight; }
-		uint8_t*	pixel_data() const						{ return mPixelData; }
-		void		set_frees_pixel_data( bool inState )	{ mFreesPixelData = inState; }
-		bool		get_frees_pixel_data( bool inState )	{ return mFreesPixelData; }
-		size_t		row_bytes() const						{ return mRowBytes; }
-		size_t		x_offset() const						{ return mXOffset; }
-		size_t		y_offset() const						{ return mYOffset; }
+        size_t			bits_per_pixel() const					{ return mBitsPerPixel; }
+        coordinate_t	width() const							{ return mWidth; }
+        coordinate_t	height() const							{ return mHeight; }
+		uint8_t*		pixel_data() const						{ return mPixelData; }
+		void			set_frees_pixel_data( bool inState )	{ mFreesPixelData = inState; }
+		bool			get_frees_pixel_data( bool inState )	{ return mFreesPixelData; }
+		size_t			row_bytes() const						{ return mRowBytes; }
+		coordinate_t	x_offset() const						{ return mXOffset; }
+		coordinate_t	y_offset() const						{ return mYOffset; }
 
-        uint8_t*	pixel_at( size_t x, size_t y ) const
+        uint8_t*	pixel_at( coordinate_t x, coordinate_t y ) const
         {
+			if( x < 0 || x >= mWidth || y < 0 || y >= mHeight )
+				return nullptr;
             return mPixelData +((x + mXOffset) * (mBitsPerPixel / 8) + (y + mYOffset) * mRowBytes);
         }
 		
-        void		set_pixel( size_t x, size_t y, int r, int g, int b, int a )
+        void		set_pixel( coordinate_t x, coordinate_t y, color_component_t r, color_component_t g, color_component_t b, color_component_t a )
         {
+			if( x < 0 || x >= mWidth || y < 0 || y >= mHeight )
+				return;
+			
 			if( mMask )
 			{
-				int		r, g, b, a;
+				color_component_t		r, g, b, a;
 				mMask->get_pixel( x, y, &r, &g, &b, &a );
 				if( a != 0xff )
 					return;
@@ -106,7 +114,7 @@ namespace winner
 			
 			if( mSysMask )
 			{
-				int		r, g, b, a;
+				color_component_t		r, g, b, a;
 				mSysMask->get_pixel( x, y, &r, &g, &b, &a );
 				if( a != 0xff )
 					return;
@@ -138,10 +146,13 @@ namespace winner
                 assert(mBitsPerPixel == 16 || mBitsPerPixel == 32);
         }
 		
-		void		get_pixel( size_t x, size_t y, int* r, int* g, int *b, int *a ) const
+		void		get_pixel( coordinate_t x, coordinate_t y, color_component_t* r, color_component_t* g, color_component_t *b, color_component_t *a ) const
 		{
 			if( mBitsPerPixel == 1 )
 			{
+				if( x < 0 || y < 0 )
+					return;
+				
 				uint8_t*	currPixel = mPixelData +(mRowBytes * y) + x / 8;
 				size_t		pixelBit = x % 8;
 				if( (*currPixel) & (1 << pixelBit) )
@@ -152,6 +163,8 @@ namespace winner
 			}
 			
             uint8_t*	currPixel = pixel_at( x, y );
+			if( !currPixel )
+				return;
             if( mBitsPerPixel == 32 )
             {
                 uint32_t	pixel = *(uint32_t*)currPixel;
@@ -189,13 +202,13 @@ namespace winner
 			}
 		}
 
-		void	fill_rect( size_t x, size_t y, size_t w, size_t h, int r, int g, int b, int a );
-		void	stroke_rect( size_t x, size_t y, size_t w, size_t h, int r, int g, int b, int a, size_t lineWidth );
-		void	fill_circle( size_t x, size_t y, size_t radius, int r, int g, int b, int a );
-		void	stroke_circle( size_t x, size_t y, size_t radius, int r, int g, int b, int a, size_t lineWidth );
-		void	stroke_line( size_t startX, size_t startY, size_t endX, size_t endY, int r, int g, int b, int a );
-		void	stroke_line( size_t startX, size_t startY, size_t endX, size_t endY, int r, int g, int b, int a, size_t lineWidth );
-		void	draw_image( size_t x, size_t y, const image& inImage );
+		void	fill_rect( coordinate_t x, coordinate_t y, coordinate_t w, coordinate_t h, color_component_t r, color_component_t g, color_component_t b, color_component_t a );
+		void	stroke_rect( coordinate_t x, coordinate_t y, coordinate_t w, coordinate_t h, color_component_t r, color_component_t g, color_component_t b, color_component_t a, coordinate_t lineWidth );
+		void	fill_circle( coordinate_t x, coordinate_t y, coordinate_t radius, color_component_t r, color_component_t g, color_component_t b, color_component_t a );
+		void	stroke_circle( coordinate_t x, coordinate_t y, coordinate_t radius, color_component_t r, color_component_t g, color_component_t b, color_component_t a, coordinate_t lineWidth );
+		void	stroke_line( coordinate_t startX, coordinate_t startY, coordinate_t endX, coordinate_t endY, color_component_t r, color_component_t g, color_component_t b, color_component_t a );
+		void	stroke_line( coordinate_t startX, coordinate_t startY, coordinate_t endX, coordinate_t endY, color_component_t r, color_component_t g, color_component_t b, color_component_t a, coordinate_t lineWidth );
+		void	draw_image( coordinate_t x, coordinate_t y, const image& inImage );
 		
 		image&	mask()
 		{
@@ -222,11 +235,11 @@ namespace winner
 		
     protected:
         uint8_t*					mPixelData;
-		size_t						mWidth;
-		size_t						mHeight;
+		coordinate_t				mWidth;
+		coordinate_t				mHeight;
 		size_t						mBitsPerPixel;
-		size_t						mXOffset;
-		size_t						mYOffset;
+		coordinate_t				mXOffset;
+		coordinate_t				mYOffset;
 		size_t						mRowBytes;
 		bool						mFreesPixelData;
 		image*						mMask;
