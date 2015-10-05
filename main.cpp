@@ -6,6 +6,26 @@
 using namespace std;
 using namespace winner;
 
+
+void	DrawDesktopWindow( window* desktopWindow )
+{
+	desktopWindow->image().fill_rect(0, 0, desktopWindow->image().width(), desktopWindow->image().height(), 0xff, 0xff, 0xff, 0xff );
+}
+
+
+void	DrawAWindow( window* aWindow )
+{
+	aWindow->image().fill_rect(0, 0, aWindow->image().width(), aWindow->image().height(), 0xff, 0x00, 0x00, 0xff );
+}
+
+
+void	DrawBWindow( window* bWindow )
+{
+	bWindow->image().fill_rect(0, 0, bWindow->image().width(), bWindow->image().height(), 0x00, 0x00, 0xff, 0xff );
+	bWindow->image().fill_circle( 170, 170, 50, 0x00, 0xff, 0x00, 0xff );
+}
+
+
 int main()
 {
     framebuffer myfb;
@@ -14,20 +34,34 @@ int main()
 		return 1;
 	}
 	
-	myfb.image().fill_rect( 0, 0, myfb.image().width(), myfb.image().height(), 0xff, 0xff, 0xff, 0xff );
-	
 	window_list		windowList( myfb.image() );
 
+	window*	desktopWindow = windowList.create_window( 0, 0, 640, 480 );
 	window*	aWindow = windowList.create_window( 100, 100, 320, 200 );
 	window*	bWindow = windowList.create_window( 116, 116, 320, 200 );
 	
-	windowList.rebuild_sys_mask_for_window( aWindow );
-	windowList.rebuild_sys_mask_for_window( bWindow );
+	windowList.rebuild_sys_mask_for_all();
 	
-	bWindow->image().fill_rect(0, 0, aWindow->image().width(), aWindow->image().height(), 0x00, 0x00, 0xff, 0xff );
-	bWindow->image().fill_circle( 170, 170, 50, 0x00, 0xff, 0x00, 0xff );
+	DrawDesktopWindow( desktopWindow );
+	DrawBWindow( bWindow );
+	DrawAWindow( aWindow );
 	
-	aWindow->image().fill_rect(0, 0, aWindow->image().width(), aWindow->image().height(), 0xff, 0x00, 0x00, 0xff );
+	myfb.flush();
+	
+	sleep(3);
+	
+	vector<window*>	affectedWindows;
+	windowList.move_window( bWindow, 200, 116, &affectedWindows );
+	
+	for( window* currWindow : affectedWindows )
+	{
+		if( currWindow == desktopWindow )
+			DrawDesktopWindow( desktopWindow );
+		if( currWindow == aWindow )
+			DrawAWindow( aWindow );
+		if( currWindow == bWindow )
+			DrawBWindow( bWindow );
+	}
 	
 	myfb.flush();
 	

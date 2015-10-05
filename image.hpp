@@ -91,6 +91,8 @@ namespace winner
 		size_t			row_bytes() const						{ return mRowBytes; }
 		coordinate_t	x_offset() const						{ return mXOffset; }
 		coordinate_t	y_offset() const						{ return mYOffset; }
+		void			set_x_offset( coordinate_t n )			{ mXOffset = n; }
+		void			set_y_offset( coordinate_t n )			{ mYOffset = n; }
 
         uint8_t*	pixel_at( coordinate_t x, coordinate_t y ) const
         {
